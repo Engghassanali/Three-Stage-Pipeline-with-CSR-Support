@@ -12,7 +12,7 @@ module controller(reset,alu_op,reg_wr,opcode,sel_B,wb_sel,cs,wr,sel_A,reg_wr_E,w
             sel_B  = 0;
             sel_A  = 0;
             wb_sel = 2'b00;
-        end 
+        end
         else begin
             case (opcode)
             7'b0110011: begin alu_op = 1; reg_wr = 1; sel_A = 0;sel_B = 0; wb_sel = 2'b00;                   end 
