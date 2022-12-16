@@ -27,6 +27,16 @@ module Ld_St_unit(opcode_E,fun3_E,load,store,LD_Byte,LD_UByte,LD_HW,LD_UHW,LD_W,
     end
 endmodule
 
+module load_store_Unit (addrL,addrS, addrL_LSU,addrS_LSU, opcode_E);
+    input logic[31:0]addrL,addrS;
+    input logic[6:0] opcode_E;
+    output logic [31:0]addrL_LSU,addrS_LSU;
+    always_comb begin
+        assign addrL_LSU = (opcode_E == 7'b0000011) ? addrL : 0;
+        assign addrS_LSU = (opcode_E == 7'b0100011) ? addrS : 0; 
+    end
+endmodule
+
 module LD_Sizing(opcode_E,fun3_E,addr_dm,LD_Byte,LD_HW,LD_W,data_rd,LD_UByte,LD_UHW);
     input logic[6:0]opcode_E;
     input logic[2:0]fun3_E;
@@ -47,12 +57,11 @@ module LD_Sizing(opcode_E,fun3_E,addr_dm,LD_Byte,LD_HW,LD_W,data_rd,LD_UByte,LD_
     end
 endmodule
 
-module ST_Sizing(opcode_E,fun3_E,mask,data_wr,WD,addr_dm,ST_Byte,ST_HByte,ST_W);
+module ST_Sizing(opcode_E,fun3_E,mask,WD,addr_dm,ST_Byte,ST_HByte,ST_W);
     input logic[1:0]addr_dm;
     input logic[6:0]opcode_E;
     input logic[2:0]fun3_E;
     input logic[31:0]WD;
-    output logic[31:0]data_wr;
     output logic[3:0]mask;
     output logic [7:0]ST_Byte;
     output logic [15:0]ST_HByte;
@@ -62,25 +71,25 @@ module ST_Sizing(opcode_E,fun3_E,mask,data_wr,WD,addr_dm,ST_Byte,ST_HByte,ST_W);
             case (fun3_E)
                 3'b000:begin 
                     if (addr_dm == 2'b00) begin 
-                        data_wr[7:0] = WD[7:0];mask = 4'b0001;ST_Byte = WD[7:0];
+                         mask = 4'b0001;ST_Byte = WD[7:0];
                     end
                     else begin
                         if (addr_dm == 2'b11)begin
-                            data_wr[31:24] = WD[31:24]; mask = 4'b0001;ST_Byte = WD[31:24];
+                            mask = 4'b0001;ST_Byte = WD[31:24];
                         end
                     end
                 end
                 3'b001:begin 
                     if (addr_dm[1] == 1'b0)begin
-                        data_wr[15:0] = WD[15:0];mask = 4'b0011;ST_HByte = WD[15:0];
+                        mask = 4'b0011;ST_HByte = WD[15:0];
                     end
                     else begin
                         if (addr_dm[1] == 1'b1) begin
-                            data_wr[31:16] = WD[31:16];mask = 4'b1100;ST_HByte = WD[15:0];
+                            mask = 4'b1100;ST_HByte = WD[15:0];
                         end
                     end
                 end
-                3'b010:begin data_wr = WD; mask = 4'b1111; ST_W = WD;  end
+                3'b010:begin mask = 4'b1111; ST_W = WD;  end
             endcase
         end
         

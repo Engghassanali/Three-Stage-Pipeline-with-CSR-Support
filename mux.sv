@@ -39,13 +39,14 @@ module Branch_Mux(sel_A,forwarded_A,PC_D,readData1);
     end
 endmodule
 
-module Branch_taken(Alu_out,PC_br,br_taken,PC,epc);
+module Branch_taken(Alu_out,PC_br,br_taken,PC,epc,stall);
     input logic [31:0]Alu_out,PC,epc;
     input logic [1:0] br_taken;
+    input logic stall;
     output logic [31:0] PC_br;
     always_comb begin 
         case (br_taken)
-            2'b00: PC_br = PC+4;
+            2'b00: PC_br = (~stall) ? PC+4 : PC;
             2'b01: PC_br = Alu_out;
             2'b10: PC_br = epc; 
         endcase  

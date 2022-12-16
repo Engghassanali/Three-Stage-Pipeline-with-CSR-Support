@@ -13,17 +13,17 @@ module RISC_V_tb;
 
     initial
     begin
-        intrrupt = 0;
+        // intrrupt = 0;
         reset <= 0;
         @(posedge clk);
         reset <= 1;
         repeat (1) @(posedge clk);
         reset <= 0;
-        repeat(5)@(posedge clk);
-        intrrupt = 1;
-        repeat (1) @(posedge clk);
-        intrrupt = 0;
-        repeat (15) @(posedge clk);
+        repeat(400)@(posedge clk);
+        // intrrupt = 1;
+        // repeat (1) @(posedge clk);
+        // intrrupt = 0;
+        // repeat (15) @(posedge clk);
         $stop;
     end
 

@@ -21,12 +21,13 @@ module register_file(raddr1,raddr2,waddr,wdata,rdata1,rdata2,clk,reg_wr_E);
         end
     end
 
-    always_ff @( posedge clk )
-    if (reg_wr_E)begin
-        begin 
-            assign rdata1 = (|raddr1)? register_memory[raddr1]:32'b0;
-            assign rdata2 = (|raddr2)? register_memory[raddr2]:32'b0;  
-            
+    always_comb begin
+        if (reg_wr_E)begin
+            begin 
+                assign rdata1 = (|raddr1)? register_memory[raddr1]:32'b0;
+                assign rdata2 = (|raddr2)? register_memory[raddr2]:32'b0;  
+                
+            end
         end
     end
 endmodule
